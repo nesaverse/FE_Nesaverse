@@ -1,0 +1,354 @@
+/* ── Page Shell ─────────────────────────────────────────────────────────── */
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-background);
+  position: relative;
+  overflow: hidden;
+  padding: 24px 16px;
+}
+
+/* ── Animated Orbs ─────────────────────────────────────────────────────── */
+.orb1,
+.orb2,
+.orb3 {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.orb1 {
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(0, 32, 104, 0.18) 0%, transparent 70%);
+  top: -120px;
+  left: -100px;
+  animation: float1 8s ease-in-out infinite;
+}
+
+.orb2 {
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(116, 91, 0, 0.14) 0%, transparent 70%);
+  bottom: -80px;
+  right: -60px;
+  animation: float2 10s ease-in-out infinite;
+}
+
+.orb3 {
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(53, 87, 188, 0.12) 0%, transparent 70%);
+  top: 50%;
+  left: 60%;
+  animation: float3 7s ease-in-out infinite;
+}
+
+@keyframes float1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, 20px) scale(1.05); }
+}
+@keyframes float2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-20px, -30px) scale(1.03); }
+}
+@keyframes float3 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(15px, 25px); }
+}
+
+/* ── Wrapper ────────────────────────────────────────────────────────────── */
+.wrapper {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 420px;
+}
+
+/* ── Brand ──────────────────────────────────────────────────────────────── */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brandIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 32, 104, 0.3);
+}
+
+.brandName {
+  font-family: 'Sora', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: -0.5px;
+}
+
+/* ── Card ───────────────────────────────────────────────────────────────── */
+.card {
+  width: 100%;
+  background: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-surface-variant);
+  border-radius: 24px;
+  padding: 36px 32px;
+  box-shadow:
+    0 4px 6px rgba(0,0,0,0.04),
+    0 20px 48px rgba(0, 32, 104, 0.08);
+  backdrop-filter: blur(12px);
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow:
+    0 4px 6px rgba(0,0,0,0.05),
+    0 24px 60px rgba(0, 32, 104, 0.12);
+}
+
+/* Shake animation on wrong credentials */
+.shake {
+  animation: shake 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translateX(-3px); }
+  20%, 80% { transform: translateX(5px); }
+  30%, 50%, 70% { transform: translateX(-6px); }
+  40%, 60% { transform: translateX(6px); }
+}
+
+/* ── Card Header ────────────────────────────────────────────────────────── */
+.cardHeader {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.title {
+  font-family: 'Sora', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-on-background);
+  margin: 0 0 6px;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 13.5px;
+  color: var(--color-outline);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Form ───────────────────────────────────────────────────────────────── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-on-background);
+  letter-spacing: 0.01em;
+}
+
+.inputWrap {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: var(--color-outline);
+  pointer-events: none;
+  transition: color 0.2s;
+}
+
+.input {
+  width: 100%;
+  height: 48px;
+  padding: 0 44px 0 42px;
+  background: var(--color-surface-container-high);
+  border: 1.5px solid var(--color-surface-variant);
+  border-radius: 12px;
+  font-size: 14.5px;
+  color: var(--color-on-background);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  box-sizing: border-box;
+}
+
+.input::placeholder {
+  color: var(--color-outline);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 32, 104, 0.1);
+  background: var(--color-surface-container-lowest);
+}
+
+.input:focus + .inputIcon,
+.inputWrap:focus-within .inputIcon {
+  color: var(--color-primary);
+}
+
+.inputError {
+  border-color: var(--color-error) !important;
+  box-shadow: 0 0 0 3px rgba(186, 26, 26, 0.1) !important;
+}
+
+.eyeBtn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-outline);
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 6px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.eyeBtn:hover {
+  color: var(--color-primary);
+  background: rgba(0, 32, 104, 0.08);
+}
+
+/* ── Error Banner ───────────────────────────────────────────────────────── */
+.errorBanner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: var(--color-error-container);
+  border: 1px solid rgba(186, 26, 26, 0.2);
+  border-radius: 10px;
+  color: var(--color-on-error-container);
+  font-size: 13px;
+  font-weight: 500;
+  animation: slideIn 0.2s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Submit Button ──────────────────────────────────────────────────────── */
+.submitBtn {
+  height: 50px;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 14px rgba(0, 32, 104, 0.3);
+  margin-top: 4px;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: var(--color-tertiary);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 32, 104, 0.35);
+}
+
+.submitBtn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submitBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ── Spinner ────────────────────────────────────────────────────────────── */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255,255,255,0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Secure Note ────────────────────────────────────────────────────────── */
+.secureNote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 20px;
+  font-size: 12px;
+  color: var(--color-outline);
+}
+
+/* ── Back Link ──────────────────────────────────────────────────────────── */
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-outline);
+  font-size: 13.5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: var(--color-primary);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .card {
+    padding: 28px 20px;
+    border-radius: 20px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+}

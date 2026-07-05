@@ -5,6 +5,9 @@ import { ThemeProvider } from './hooks/useTheme';
 import Layout from './components/layout/Layout';
 import AdminLayout from './components/layout/AdminLayout';
 
+// Guard
+import AdminProtectedRoute from './components/AdminProtectedRoute';
+
 // Pages
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
@@ -12,6 +15,7 @@ import DiscordHubPage from './pages/DiscordHubPage';
 import WhatsAppHubPage from './pages/WhatsAppHubPage';
 import InstagramHubPage from './pages/InstagramHubPage';
 import TikTokHubPage from './pages/TikTokHubPage';
+import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 
 const App = () => {
@@ -29,8 +33,18 @@ const App = () => {
             <Route path="tiktok" element={<TikTokHubPage />} />
           </Route>
 
-          {/* Admin layout — sidebar only */}
-          <Route path="admin" element={<AdminLayout />}>
+          {/* Admin login — no navbar */}
+          <Route path="admin/login" element={<AdminLoginPage />} />
+
+          {/* Admin dashboard — protected, sidebar only */}
+          <Route
+            path="admin"
+            element={
+              <AdminProtectedRoute>
+                <AdminLayout />
+              </AdminProtectedRoute>
+            }
+          >
             <Route index element={<AdminDashboardPage />} />
           </Route>
 
