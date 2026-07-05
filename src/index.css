@@ -1,0 +1,268 @@
+/* =====================================================
+   NesaVerse Design System — Global CSS
+   ===================================================== */
+
+/* ---- Design Tokens ---- */
+:root {
+  /* Colors */
+  --color-primary: #002068;
+  --color-primary-container: #003399;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #8aa4ff;
+  --color-primary-fixed: #dce1ff;
+  --color-primary-fixed-dim: #b5c4ff;
+  --color-inverse-primary: #b5c4ff;
+
+  --color-secondary: #745b00;
+  --color-secondary-container: #fecb00;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #6e5700;
+
+  --color-tertiary: #0d2557;
+  --color-tertiary-container: #273b6e;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-container: #93a7e1;
+
+  --color-background: #f8f9ff;
+  --color-on-background: #0b1c30;
+  --color-surface: #f8f9ff;
+  --color-surface-dim: #cbdbf5;
+  --color-surface-bright: #f8f9ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #eff4ff;
+  --color-surface-container: #e5eeff;
+  --color-surface-container-high: #dce9ff;
+  --color-surface-container-highest: #d3e4fe;
+  --color-on-surface: #0b1c30;
+  --color-on-surface-variant: #444653;
+  --color-inverse-surface: #213145;
+  --color-inverse-on-surface: #eaf1ff;
+  --color-surface-tint: #3557bc;
+  --color-surface-variant: #d3e4fe;
+
+  --color-outline: #747684;
+  --color-outline-variant: #c4c5d5;
+
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  /* Typography */
+  --font-display: 'Sora', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-label: 'JetBrains Mono', monospace;
+
+  /* Spacing */
+  --spacing-unit: 8px;
+  --container-max: 1280px;
+  --gutter: 24px;
+  --margin-desktop: 64px;
+  --margin-mobile: 16px;
+
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 32, 104, 0.06);
+  --shadow: 0 4px 12px rgba(0, 32, 104, 0.08);
+  --shadow-lg: 0 10px 30px rgba(0, 32, 104, 0.12);
+  --shadow-xl: 0 20px 50px rgba(0, 32, 104, 0.16);
+}
+
+/* ---- Reset ---- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+input, select, textarea { font-family: inherit; }
+ul, ol { list-style: none; }
+
+/* ---- Typography Helpers ---- */
+.font-display    { font-family: var(--font-display); }
+.font-body       { font-family: var(--font-body); }
+.font-label      { font-family: var(--font-label); }
+
+/* ---- Glassmorphism ---- */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 32, 104, 0.1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+.glass-panel:hover {
+  border-color: rgba(0, 32, 104, 0.3);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ---- Material Symbols ---- */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-size: 24px;
+  user-select: none;
+}
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-surface-container-low); }
+::-webkit-scrollbar-thumb { background: var(--color-outline); border-radius: 10px; }
+
+/* ---- Selection ---- */
+::selection {
+  background: rgba(0, 32, 104, 0.2);
+  color: var(--color-primary);
+}
+
+/* ---- Container ---- */
+.container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--margin-desktop);
+}
+@media (max-width: 768px) {
+  .container { padding-inline: var(--margin-mobile); }
+}
+
+/* ---- Animations ---- */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-fade-in-up { animation: fadeInUp 0.6s ease forwards; }
+.floating-shape { animation: float 6s ease-in-out infinite; }
+
+/* ---- Skeleton Loader ---- */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-surface-container) 25%, var(--color-surface-container-high) 50%, var(--color-surface-container) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius);
+}
+
+/* ---- Primary Gradient Text ---- */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-primary), #153ea3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ---- Utility ---- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* =====================================================
+   Dark Mode — [data-theme="dark"]
+   ===================================================== */
+[data-theme="dark"] {
+  --color-primary: #7aa3ff;
+  --color-primary-container: #3a5fcf;
+  --color-on-primary: #001550;
+  --color-on-primary-container: #dce5ff;
+  --color-primary-fixed: #1a2f7a;
+  --color-primary-fixed-dim: #3a5fcf;
+  --color-inverse-primary: #002068;
+
+  --color-secondary: #f4c430;
+  --color-secondary-container: #3d3000;
+  --color-on-secondary: #1a1500;
+  --color-on-secondary-container: #f4c430;
+
+  --color-tertiary: #93a7e1;
+  --color-tertiary-container: #1e2f5c;
+  --color-on-tertiary: #0d1a3a;
+  --color-on-tertiary-container: #c5d4ff;
+
+  --color-background: #0d1117;
+  --color-on-background: #e2e8ff;
+  --color-surface: #0d1117;
+  --color-surface-dim: #0a0e18;
+  --color-surface-bright: #1a2035;
+  --color-surface-container-lowest: #111827;
+  --color-surface-container-low: #161d2e;
+  --color-surface-container: #1c2338;
+  --color-surface-container-high: #222944;
+  --color-surface-container-highest: #283050;
+  --color-on-surface: #e2e8ff;
+  --color-on-surface-variant: #9ba8c9;
+  --color-inverse-surface: #dce6ff;
+  --color-inverse-on-surface: #1a2035;
+  --color-surface-tint: #7aa3ff;
+  --color-surface-variant: #1e2a50;
+
+  --color-outline: #4a5280;
+  --color-outline-variant: #2a3260;
+
+  --color-error: #ff8a8a;
+  --color-on-error: #4a0000;
+  --color-error-container: #6a0000;
+  --color-on-error-container: #ffdad6;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+/* Dark mode component overrides */
+[data-theme="dark"] .glass-panel {
+  background: rgba(17, 24, 39, 0.75);
+  border-color: rgba(122, 163, 255, 0.12);
+}
+[data-theme="dark"] .glass-panel:hover {
+  border-color: rgba(122, 163, 255, 0.3);
+}
+
+[data-theme="dark"] .gradient-text {
+  background: linear-gradient(135deg, #7aa3ff, #93a7e1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="dark"] ::selection {
+  background: rgba(122, 163, 255, 0.25);
+  color: #7aa3ff;
+}
+
+/* Smooth theme transition */
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}

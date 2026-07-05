@@ -1,0 +1,66 @@
+.page { position: relative; padding-bottom: 100px; }
+.meshBg { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse at 10% 20%, rgba(254,44,85,0.06) 0%, transparent 50%), radial-gradient(ellipse at 90% 80%, rgba(1,1,1,0.04) 0%, transparent 50%); }
+
+/* Header */
+.pageHeader { position: relative; z-index: 2; text-align: center; padding-block: 64px 32px; }
+.ttBadge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 20px; border-radius: var(--radius-full); background: linear-gradient(135deg, rgba(254,44,85,0.12), rgba(0,242,234,0.08)); border: 1px solid rgba(254,44,85,0.25); color: #fe2c55; font-family: var(--font-label); font-size: 12px; font-weight: 600; letter-spacing: 0.04em; margin-bottom: 16px; }
+.pageTitle { font-family: var(--font-display); font-size: clamp(32px, 5vw, 56px); font-weight: 700; margin-bottom: 16px; letter-spacing: -0.02em; color: var(--color-on-background); }
+.gradTitle { background: linear-gradient(135deg, #fe2c55, #25f4ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.pageDesc { font-size: 17px; color: var(--color-on-surface-variant); max-width: 540px; margin: 0 auto; line-height: 1.7; }
+
+/* Filter */
+.filterRow { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; position: relative; z-index: 2; }
+.catBtn { padding: 8px 20px; border-radius: var(--radius-full); font-size: 13px; font-weight: 600; color: var(--color-on-surface-variant); border: 1px solid var(--color-outline-variant); background: var(--color-surface-container-lowest); transition: all 0.2s ease; }
+.catBtn:hover { border-color: #fe2c55; color: #fe2c55; }
+.catActive { background: linear-gradient(135deg, #fe2c55, #25f4ee) !important; color: white !important; border-color: transparent !important; box-shadow: 0 4px 12px rgba(254,44,85,0.3); }
+
+/* Grid */
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 48px; position: relative; z-index: 2; }
+
+/* Video Card */
+.card { border-radius: var(--radius-xl); overflow: hidden; background: var(--color-surface-container-lowest); border: 1px solid var(--color-outline-variant); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.thumbWrap { position: relative; aspect-ratio: 9/16; max-height: 300px; overflow: hidden; }
+.thumb { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.card:hover .thumb { transform: scale(1.05); }
+.thumbOverlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%); }
+.duration { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.7); color: white; font-family: var(--font-label); font-size: 11px; padding: 2px 8px; border-radius: var(--radius-sm); }
+.trendBadge { position: absolute; top: 8px; left: 8px; display: flex; align-items: center; gap: 4px; background: #fe2c55; color: white; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: var(--radius-full); }
+.playBtn { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.85); opacity: 0; transition: opacity 0.2s ease; }
+.card:hover .playBtn { opacity: 1; }
+
+.cardInfo { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+.creatorRow { display: flex; align-items: center; gap: 8px; }
+.creatorAvatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+.creatorHandle { font-family: var(--font-label); font-size: 12px; color: var(--color-on-surface-variant); flex: 1; }
+.videoTitle { font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--color-on-surface); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.metaRow { display: flex; gap: 16px; }
+.meta { display: flex; align-items: center; gap: 4px; font-family: var(--font-label); font-size: 12px; color: var(--color-on-surface-variant); }
+
+/* Ticker */
+.tickerWrap { display: flex; align-items: center; gap: 12px; background: var(--color-surface-container-low); border-top: 1px solid var(--color-outline-variant); border-bottom: 1px solid var(--color-outline-variant); padding: 12px 0; overflow: hidden; margin-bottom: 48px; position: relative; z-index: 2; }
+.tickerLabel { display: flex; align-items: center; gap: 6px; color: #fe2c55; font-family: var(--font-label); font-size: 12px; font-weight: 700; padding-inline: 24px; white-space: nowrap; flex-shrink: 0; }
+.ticker { flex: 1; overflow: hidden; }
+.tickerTrack { display: flex; gap: 24px; animation: tickerScroll 20s linear infinite; width: max-content; }
+@keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.tickerTag { font-family: var(--font-label); font-size: 13px; font-weight: 600; color: var(--color-primary); white-space: nowrap; }
+
+/* CTA */
+.cta { position: relative; z-index: 2; }
+.ctaInner { text-align: center; padding: 60px 40px; border-radius: var(--radius-xl); background: linear-gradient(135deg, rgba(254,44,85,0.04), rgba(37,244,238,0.04)); border: 1px solid rgba(254,44,85,0.12); position: relative; overflow: hidden; }
+.ctaGlow1 { position: absolute; top: -80px; left: -80px; width: 200px; height: 200px; border-radius: 50%; background: rgba(254,44,85,0.1); filter: blur(50px); }
+.ctaGlow2 { position: absolute; bottom: -80px; right: -80px; width: 200px; height: 200px; border-radius: 50%; background: rgba(37,244,238,0.08); filter: blur(50px); }
+.ctaTitle { font-family: var(--font-display); font-size: clamp(24px, 4vw, 36px); font-weight: 700; color: var(--color-on-surface); margin-bottom: 12px; position: relative; }
+.ctaDesc { font-size: 16px; color: var(--color-on-surface-variant); max-width: 480px; margin: 0 auto 28px; line-height: 1.7; position: relative; }
+.ctaBtns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; }
+
+/* Responsive */
+@media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .ctaInner { padding: 40px 20px; }
+  .filterRow { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }
+  .filterRow::-webkit-scrollbar { display: none; }
+  .catBtn { flex-shrink: 0; }
+}
+@media (max-width: 420px) { .grid { grid-template-columns: 1fr; } }

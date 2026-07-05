@@ -1,0 +1,202 @@
+.page { position: relative; padding-bottom: 100px; }
+.meshBg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+
+/* Header */
+.pageHeader {
+  text-align: center;
+  padding-block: 64px 32px;
+  position: relative;
+  z-index: 2;
+}
+.pageTitle {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 700;
+  color: var(--color-on-background);
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+.pageDesc { font-size: 17px; color: var(--color-on-surface-variant); line-height: 1.7; max-width: 580px; margin: 0 auto; }
+
+/* Search */
+.searchBar {
+  position: relative;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 2;
+}
+.searchIcon {
+  position: absolute;
+  left: calc(var(--margin-desktop) + 16px);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-primary);
+  font-size: 20px;
+}
+.searchInput {
+  width: 100%;
+  padding: 16px 20px 16px 52px;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: var(--radius-xl);
+  background: white;
+  font-size: 15px;
+  color: var(--color-on-surface);
+  outline: none;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.searchInput:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0,32,104,0.1);
+}
+@media (max-width: 768px) {
+  .searchIcon { left: calc(var(--margin-mobile) + 16px); }
+}
+
+/* Filter */
+.filterSection { margin-bottom: 40px; position: relative; z-index: 2; }
+.categories {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.catBtn {
+  padding: 10px 22px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-on-surface-variant);
+  border: 1px solid var(--color-outline-variant);
+  background: white;
+  transition: all 0.2s ease;
+}
+.catBtn:hover { border-color: var(--color-primary); color: var(--color-primary); background: rgba(0,32,104,0.04); }
+.catActive { background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container)) !important; color: white !important; border-color: transparent !important; box-shadow: 0 4px 12px rgba(0,32,104,0.25); }
+
+/* Channel Grid */
+.channelGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 64px;
+  position: relative;
+  z-index: 2;
+}
+.skeletonCard { height: 300px; border-radius: var(--radius-xl); }
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--color-on-surface-variant);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  font-size: 16px;
+}
+
+/* Channel Card */
+.channelCard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  border-radius: var(--radius-xl);
+  background: white;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+.channelCard:hover { transform: translateY(-4px); }
+.cardTop { display: flex; align-items: center; justify-content: space-between; }
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  border: 2px solid var(--color-outline-variant);
+}
+.channelName {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-on-surface);
+  margin-bottom: 6px;
+}
+.followersRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-on-surface-variant);
+  margin-bottom: 10px;
+}
+.followersText { font-family: var(--font-label); font-size: 12px; }
+.channelDesc { font-size: 13px; color: var(--color-on-surface-variant); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.joinBtn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  text-align: center;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  margin-top: auto;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+.joinBtn:hover { opacity: 0.9; }
+.joinBtn:active { transform: scale(0.97); }
+
+/* CTA */
+.ctaSection { position: relative; z-index: 2; }
+.ctaCard {
+  border-radius: var(--radius-xl);
+  padding: 64px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: rgba(0,32,104,0.02);
+}
+.ctaGlow1 {
+  position: absolute; top: -80px; left: -80px;
+  width: 240px; height: 240px; border-radius: 50%;
+  background: rgba(0,32,104,0.08); filter: blur(60px);
+}
+.ctaGlow2 {
+  position: absolute; bottom: -80px; right: -80px;
+  width: 240px; height: 240px; border-radius: 50%;
+  background: rgba(254,203,0,0.12); filter: blur(60px);
+}
+.ctaContent { position: relative; z-index: 1; }
+.ctaTitle { font-family: var(--font-display); font-size: clamp(28px, 4vw, 42px); font-weight: 700; color: var(--color-on-surface); margin-bottom: 16px; }
+.ctaDesc { font-size: 16px; color: var(--color-on-surface-variant); max-width: 520px; margin: 0 auto 32px; line-height: 1.7; }
+.ctaBtns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* FAB */
+.fab {
+  position: fixed;
+  bottom: 32px; right: 32px;
+  width: 56px; height: 56px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-secondary-container), #f1c100);
+  color: var(--color-on-secondary-container);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 24px rgba(254,203,0,0.4);
+  z-index: 90;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.fab:hover { transform: scale(1.1); }
+.fab:active { transform: scale(0.95); }
+
+/* Responsive */
+@media (max-width: 1024px) { .channelGrid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) {
+  .channelGrid { grid-template-columns: 1fr; }
+  .categories { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
+  .categories::-webkit-scrollbar { display: none; }
+  .catBtn { flex-shrink: 0; }
+  .ctaCard { padding: 40px 20px; }
+  .ctaBtns { flex-direction: column; align-items: center; }
+}
