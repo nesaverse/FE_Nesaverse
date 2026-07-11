@@ -99,10 +99,6 @@ const AdminCrudPage = ({
     }
   };
 
-  const filtered = items.filter((item) =>
-    fields.some((f) => String(item[f.name] ?? '').toLowerCase().includes(search.toLowerCase()))
-  );
-
   return (
     <div className={styles.page}>
       {/* Header */}
@@ -151,7 +147,7 @@ const AdminCrudPage = ({
                     <td />
                   </tr>
                 ))
-              ) : filtered.length === 0 ? (
+              ) : items.length === 0 ? (
                 <tr>
                   <td colSpan={tableHeaders.length + 1} className={styles.emptyCell}>
                     <span className="material-symbols-outlined" style={{ fontSize: 36, color: 'var(--color-outline)' }}>search_off</span>
@@ -159,7 +155,7 @@ const AdminCrudPage = ({
                   </td>
                 </tr>
               ) : (
-                filtered.map((item) =>
+                items.map((item) =>
                   renderRow(item, () => openEdit(item), () => setDeleteId(item.id))
                 )
               )}

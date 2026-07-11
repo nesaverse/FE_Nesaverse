@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchServers } from '../utils/api';
 import { WA_TEMPLATES } from '../utils/whatsapp';
+import { formatNum } from '../utils/format';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import SEO from '../components/SEO';
@@ -18,13 +19,6 @@ const gradients = [
   'linear-gradient(135deg, #EB459E, #5865F2)',
   'linear-gradient(135deg, #5865F2, #7289da, #EB459E)',
 ];
-
-const formatNum = (n) => {
-  if (!n) return '0';
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(0)}K`;
-  return String(n);
-};
 
 const ServerCard = ({ server, index }) => {
   const gradient = gradients[index % gradients.length];

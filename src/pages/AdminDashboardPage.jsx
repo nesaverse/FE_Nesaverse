@@ -6,16 +6,9 @@ import {
   AreaChart, Area,
 } from 'recharts';
 import { fetchStats, fetchChartData } from '../utils/api';
+import { formatNum } from '../utils/format';
 import { useTheme } from '../hooks/useTheme';
 import styles from './AdminDashboardPage.module.css';
-
-/* ─── Helpers ──────────────────────────────────────────────── */
-const fmt = (n) => {
-  if (n == null) return '—';
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)     return `${(n / 1_000).toFixed(0)}K`;
-  return String(n);
-};
 
 /* ─── Stat Card ─────────────────────────────────────────────── */
 const PALETTE = {
@@ -61,7 +54,7 @@ const CustomTooltip = ({ active, payload, label }) => {
       <p className={styles.tooltipLabel}>{label}</p>
       {payload.map((p, i) => (
         <p key={i} className={styles.tooltipVal} style={{ color: p.color }}>
-          {p.name}: <strong>{fmt(p.value)}</strong>
+          {p.name}: <strong>{formatNum(p.value)}</strong>
         </p>
       ))}
     </div>
@@ -171,7 +164,7 @@ const AdminDashboardPage = () => {
       <div className={styles.statsGrid}>
         <StatCard
           title="Total Visitors"
-          value={stats ? fmt(stats.totalVisitors) : '—'}
+          value={stats ? formatNum(stats.totalVisitors) : '—'}
           sub="Semua waktu"
           icon="groups"
           palette="blue"
@@ -179,7 +172,7 @@ const AdminDashboardPage = () => {
         />
         <StatCard
           title="Active Communities"
-          value={stats ? fmt(stats.activeCommunities) : '—'}
+          value={stats ? formatNum(stats.activeCommunities) : '—'}
           sub="Across 6 platforms"
           icon="hub"
           palette="amber"
@@ -187,7 +180,7 @@ const AdminDashboardPage = () => {
         />
         <StatCard
           title="Nesa Velocity"
-          value={stats ? `${fmt(stats.nesaVelocity)}/min` : '—'}
+          value={stats ? `${formatNum(stats.nesaVelocity)}/min` : '—'}
           sub="Interaction rate"
           icon="bolt"
           palette="green"
@@ -295,8 +288,8 @@ const AdminDashboardPage = () => {
                 <BarChart data={chart.donationTrend} margin={{ top: 4, right: 12, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(128,128,128,0.1)" />
                   <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--color-outline)' }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 11, fill: 'var(--color-outline)' }} axisLine={false} tickLine={false} tickFormatter={v => fmt(v)} />
-                  <Tooltip content={<CustomTooltip />} formatter={(v) => [`Rp ${fmt(v)}`, 'Donation']} />
+                  <YAxis tick={{ fontSize: 11, fill: 'var(--color-outline)' }} axisLine={false} tickLine={false} tickFormatter={v => formatNum(v)} />
+                  <Tooltip content={<CustomTooltip />} formatter={(v) => [`Rp ${formatNum(v)}`, 'Donation']} />
                   <Bar dataKey="total" name="Donation" fill="#ef4444" radius={[4,4,0,0]} />
                 </BarChart>
               </ResponsiveContainer>

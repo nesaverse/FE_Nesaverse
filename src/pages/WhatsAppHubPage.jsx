@@ -1,18 +1,13 @@
 import { useState, useEffect } from 'react';
 import { fetchChannels } from '../utils/api';
 import { WA_TEMPLATES } from '../utils/whatsapp';
+import { formatNum } from '../utils/format';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import SEO from '../components/SEO';
 import styles from './WhatsAppHubPage.module.css';
 
 const CATEGORIES = ['All', 'Gaming', 'DankMemes', 'Entertainment', 'AI-Art', 'Tech', 'Elite'];
-
-const formatNum = (n) => {
-  if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
-  if (n >= 1000) return `${(n / 1000).toFixed(0)}K`;
-  return n.toString();
-};
 
 const ChannelCard = ({ channel }) => {
   const colorMap = { Gaming: 'primary', DankMemes: 'secondary', Entertainment: 'tertiary', 'AI-Art': 'primary', Tech: 'secondary', Elite: 'primary', Cinema: 'tertiary' };

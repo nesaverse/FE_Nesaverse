@@ -1,19 +1,13 @@
 import { useState, useEffect } from 'react';
 import { fetchYouTube } from '../utils/api';
 import { WA_TEMPLATES } from '../utils/whatsapp';
+import { formatNum } from '../utils/format';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import SEO from '../components/SEO';
 import styles from './YouTubeHubPage.module.css';
 
 const CATS = ['All', 'Gaming', 'AI-Art', 'Tech', 'Lifestyle', 'Education'];
-
-const fmt = (n) => {
-  const num = parseInt(String(n).replace(/\D/g, '')) || 0;
-  if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(1)}M`;
-  if (num >= 1_000) return `${(num / 1_000).toFixed(0)}K`;
-  return String(n);
-};
 
 const ChannelCard = ({ c }) => (
   <article className={`${styles.card} glass-panel`}>

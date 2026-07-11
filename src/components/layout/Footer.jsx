@@ -30,15 +30,15 @@
               Building the future of digital expression. The backbone of communities, clans, and creators.
             </p>
             <div className={styles.socials}>
-              <button className={styles.socialBtn} aria-label="Website">
+              <a href="https://nesaverse.vercel.app" target="_blank" rel="noopener noreferrer" className={styles.socialBtn} aria-label="Website">
                 <span className="material-symbols-outlined">public</span>
-              </button>
-              <button className={styles.socialBtn} aria-label="Community">
+              </a>
+              <a href="https://discord.gg/nesaverse" target="_blank" rel="noopener noreferrer" className={styles.socialBtn} aria-label="Community">
                 <span className="material-symbols-outlined">group</span>
-              </button>
-              <button className={styles.socialBtn} aria-label="Rocket">
+              </a>
+              <a href="https://github.com/nesaverse" target="_blank" rel="noopener noreferrer" className={styles.socialBtn} aria-label="GitHub">
                 <span className="material-symbols-outlined">rocket_launch</span>
-              </button>
+              </a>
             </div>
           </div>
 
