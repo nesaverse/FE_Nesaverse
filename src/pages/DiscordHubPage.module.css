@@ -3,8 +3,20 @@
 .meshBg {
   position: fixed; inset: 0; pointer-events: none; z-index: 0;
   background:
-    radial-gradient(circle at 15% 20%, rgba(88,101,242,0.06) 0%, transparent 40%),
-    radial-gradient(circle at 85% 80%, rgba(88,101,242,0.04) 0%, transparent 40%);
+    radial-gradient(circle at 15% 20%, rgba(88,101,242,0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(88,101,242,0.06) 0%, transparent 40%);
+  animation: meshDrift 20s ease-in-out infinite;
+}
+
+.orb1 {
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(88,101,242,0.08) 0%, transparent 70%);
+  top: 10%; left: -40px;
+}
+.orb2 {
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, rgba(114,137,218,0.07) 0%, transparent 70%);
+  bottom: 15%; right: -30px;
 }
 
 /* Header */

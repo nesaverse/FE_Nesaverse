@@ -72,6 +72,8 @@ const InstagramHubPage = () => {
         keywords="instagram creator indonesia, influencer instagram, nesaverse instagram, direktori influencer"
       />
       <div className={styles.meshBg} aria-hidden="true" />
+      <div className={`${styles.orb1} orb orb1`} aria-hidden="true" />
+      <div className={`${styles.orb2} orb orb2`} aria-hidden="true" />
 
       <header className={`container ${styles.pageHeader}`}>
         <div className={styles.igBadge}>

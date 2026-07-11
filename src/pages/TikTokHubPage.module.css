@@ -1,5 +1,16 @@
 .page { position: relative; padding-bottom: 100px; }
-.meshBg { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse at 10% 20%, rgba(254,44,85,0.06) 0%, transparent 50%), radial-gradient(ellipse at 90% 80%, rgba(1,1,1,0.04) 0%, transparent 50%); }
+.meshBg { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse at 10% 20%, rgba(254,44,85,0.08) 0%, transparent 50%), radial-gradient(ellipse at 90% 80%, rgba(1,1,1,0.05) 0%, transparent 50%); animation: meshDrift 20s ease-in-out infinite; }
+
+.orb1 {
+  width: 170px; height: 170px;
+  background: radial-gradient(circle, rgba(254,44,85,0.07) 0%, transparent 70%);
+  top: 10%; right: -50px;
+}
+.orb2 {
+  width: 140px; height: 140px;
+  background: radial-gradient(circle, rgba(37,244,238,0.05) 0%, transparent 70%);
+  bottom: 15%; left: -40px;
+}
 
 /* Header */
 .pageHeader { position: relative; z-index: 2; text-align: center; padding-block: 64px 32px; }

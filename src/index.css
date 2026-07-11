@@ -1,6 +1,7 @@
 /* =====================================================
    NesaVerse Design System — Global CSS
    ===================================================== */
+@import './styles/backgrounds.css';
 
 /* ---- Design Tokens ---- */
 :root {
@@ -88,10 +89,10 @@ body {
   font-family: var(--font-body);
   background-color: var(--color-background);
   background-image:
-    radial-gradient(ellipse at 15% 10%, rgba(53, 87, 188, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 85% 15%, rgba(116, 91, 0, 0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 85%, rgba(13, 37, 87, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 20% 80%, rgba(53, 87, 188, 0.04) 0%, transparent 50%);
+    radial-gradient(ellipse at 15% 10%, rgba(53, 87, 188, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 15%, rgba(116, 91, 0, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 85%, rgba(13, 37, 87, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 80%, rgba(53, 87, 188, 0.05) 0%, transparent 50%);
   background-attachment: fixed;
   color: var(--color-on-background);
   line-height: 1.6;
@@ -112,15 +113,35 @@ ul, ol { list-style: none; }
 
 /* ---- Glassmorphism ---- */
 .glass-panel {
+  position: relative;
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(0, 32, 104, 0.1);
   transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.2));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
 .glass-panel:hover {
   border-color: rgba(0, 32, 104, 0.3);
   box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+.glass-panel:hover::before {
+  opacity: 1;
 }
 
 /* ---- Material Symbols ---- */
@@ -260,8 +281,12 @@ ul, ol { list-style: none; }
   background: rgba(17, 24, 39, 0.75);
   border-color: rgba(122, 163, 255, 0.12);
 }
+[data-theme="dark"] .glass-panel::before {
+  background: linear-gradient(135deg, transparent 40%, rgba(122,163,255,0.08));
+}
 [data-theme="dark"] .glass-panel:hover {
   border-color: rgba(122, 163, 255, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 40px rgba(122, 163, 255, 0.08);
 }
 
 [data-theme="dark"] .gradient-text {

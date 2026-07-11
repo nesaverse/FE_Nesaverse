@@ -57,6 +57,8 @@ const RobloxHubPage = () => {
         keywords="game roblox indonesia, roblox community, guild roblox, nesaverse roblox"
       />
       <div className={styles.meshBg} aria-hidden="true" />
+      <div className={`${styles.orb1} orb orb1`} aria-hidden="true" />
+      <div className={`${styles.orb2} orb orb2`} aria-hidden="true" />
 
       <header className={`container ${styles.pageHeader}`}>
         <div className={styles.rblxBadgeHeader}>

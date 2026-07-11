@@ -63,6 +63,8 @@ const TikTokHubPage = () => {
         keywords="tiktok creator indonesia, video viral tiktok, nesaverse tiktok, content creator tiktok"
       />
       <div className={styles.meshBg} aria-hidden="true" />
+      <div className={`${styles.orb1} orb orb1`} aria-hidden="true" />
+      <div className={`${styles.orb2} orb orb2`} aria-hidden="true" />
       <header className={`container ${styles.pageHeader}`}>
         <div className={styles.ttBadge}>
           <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1", fontSize: '18px' }}>play_circle</span>

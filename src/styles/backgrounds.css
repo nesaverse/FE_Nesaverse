@@ -1,0 +1,90 @@
+/* =====================================================
+   Shared Background Effects — NesaVerse
+   ===================================================== */
+
+/* ── Animated Mesh Background ────────────────────────── */
+@keyframes meshDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, -15px) scale(1.03); }
+  66% { transform: translate(-15px, 10px) scale(0.97); }
+}
+
+@keyframes orbFloat1 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(25px, -30px) rotate(8deg); }
+}
+
+@keyframes orbFloat2 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-20px, 25px) rotate(-6deg); }
+}
+
+/* ── Floating Orb Base ───────────────────────────────── */
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+}
+
+.orb1 {
+  animation: orbFloat1 10s ease-in-out infinite;
+}
+
+.orb2 {
+  animation: orbFloat2 12s ease-in-out infinite;
+}
+
+/* ── Dot Pattern Overlay ─────────────────────────────── */
+.dotPattern {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(circle, rgba(0, 32, 104, 0.025) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+[data-theme="dark"] .dotPattern {
+  background-image: radial-gradient(circle, rgba(122, 163, 255, 0.02) 1px, transparent 1px);
+}
+
+/* ── Enhanced Card Hover ─────────────────────────────── */
+.enhancedCard {
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.enhancedCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.enhancedCard:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 10px 30px rgba(0, 32, 104, 0.12),
+    0 0 40px rgba(var(--orb-rgb, 0, 32, 104), 0.06);
+}
+
+.enhancedCard:hover::before {
+  opacity: 1;
+}
+
+[data-theme="dark"] .enhancedCard:hover {
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(var(--orb-rgb, 122, 163, 255), 0.08);
+}

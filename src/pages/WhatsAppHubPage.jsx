@@ -61,13 +61,9 @@ const WhatsAppHubPage = () => {
         description="Temukan dan ikuti channel WhatsApp terpopuler dan terkurasi untuk gaming, meme, teknologi, dan hiburan di NesaVerse."
         keywords="whatsapp channel indonesia, direktori whatsapp channel, nesaverse whatsapp, whatsapp community"
       />
-      <div
-        className={styles.meshBg}
-        style={{
-          backgroundImage: `radial-gradient(circle at 20% 20%, rgba(0,32,104,0.04) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(254,203,0,0.06) 0%, transparent 40%)`,
-        }}
-        aria-hidden="true"
-      />
+      <div className={styles.meshBg} aria-hidden="true" />
+      <div className={`${styles.orb1} orb orb1`} aria-hidden="true" />
+      <div className={`${styles.orb2} orb orb2`} aria-hidden="true" />
 
       {/* Header */}
       <header className={`container ${styles.pageHeader}`}>
