@@ -32,11 +32,26 @@ const communityLinks = [
     desc: 'Video & tren viral',
     accent: '#010101',
   },
+  {
+    label: 'YouTube Hub',
+    to: '/youtube',
+    icon: 'smart_display',
+    desc: 'Channel & konten video',
+    accent: '#FF0000',
+  },
+  {
+    label: 'Roblox Hub',
+    to: '/roblox',
+    icon: 'sports_esports',
+    desc: 'Game & komunitas Roblox',
+    accent: '#00A2FF',
+  },
 ];
 
 const navLinks = [
   { label: 'Explore', to: '/' },
   { label: 'About', to: '/about' },
+  { label: 'Donate', to: '/donate', accent: true },
 ];
 
 const Navbar = () => {
@@ -171,6 +186,19 @@ const Navbar = () => {
               About
             </NavLink>
           </li>
+
+          {/* Donate */}
+          <li>
+            <NavLink
+              to="/donate"
+              className={({ isActive }) =>
+                `${styles.navLink} ${styles.donateLink} ${isActive ? styles.active : ''}`
+              }
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '16px', fontVariationSettings: "'FILL' 1" }}>favorite</span>
+              Donate
+            </NavLink>
+          </li>
         </ul>
 
         {/* Actions */}
@@ -189,6 +217,16 @@ const Navbar = () => {
               {theme === 'light' ? 'dark_mode' : 'light_mode'}
             </span>
           </button>
+
+          {/* Admin button */}
+          <Link
+            to="/admin"
+            className={styles.adminNavBtn}
+            title="Admin Dashboard"
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: 16, fontVariationSettings: "'FILL' 1" }}>shield</span>
+            <span className={styles.adminNavLabel}>Admin</span>
+          </Link>
 
 
           {/* Hamburger */}
@@ -257,6 +295,19 @@ const Navbar = () => {
             >
               <span className="material-symbols-outlined">info</span>
               About
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/donate"
+              className={({ isActive }) =>
+                `${styles.mobileNavLink} ${styles.mobileDonateLink} ${isActive ? styles.active : ''}`
+              }
+              onClick={() => setMenuOpen(false)}
+            >
+              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
+              Donate
             </NavLink>
           </li>
 

@@ -1,315 +1,329 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { fetchStats, fetchCommunities } from '../utils/api';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell, Legend,
+  AreaChart, Area,
+} from 'recharts';
+import { fetchStats, fetchChartData } from '../utils/api';
+import { useTheme } from '../hooks/useTheme';
 import styles from './AdminDashboardPage.module.css';
 
-// ─── Realtime hook: polling every 3 seconds ───────────────────────────────
-function useRealtimeStats(intervalMs = 3000) {
-  const [stats, setStats] = useState(null);
-  const [prevStats, setPrevStats] = useState(null);
-
-  const load = useCallback(() => {
-    fetchStats()
-      .then((data) => {
-        setPrevStats((prev) => prev || data);
-        setStats((old) => {
-          setPrevStats(old);
-          return data;
-        });
-      })
-      .catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    load();
-    const id = setInterval(load, intervalMs);
-    return () => clearInterval(id);
-  }, [load, intervalMs]);
-
-  return { stats, prevStats };
-}
-
-// ─── Mini sparkline bar ───────────────────────────────────────────────────
-const Sparkline = ({ values, color }) => (
-  <div className={styles.sparkline}>
-    {values.map((v, i) => (
-      <div
-        key={i}
-        className={styles.sparkBar}
-        style={{ height: `${v}%`, background: color }}
-      />
-    ))}
-  </div>
-);
-
-// colour palette for stat cards (hex, not CSS vars — needed for template literals)
-const CARD_COLORS = {
-  primary:   { hex: '#002068', bg: 'rgba(0,32,104,0.08)' },
-  secondary: { hex: '#745b00', bg: 'rgba(116,91,0,0.08)' },
-  tertiary:  { hex: '#0d2557', bg: 'rgba(13,37,87,0.08)' },
+/* ─── Helpers ──────────────────────────────────────────────── */
+const fmt = (n) => {
+  if (n == null) return '—';
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000)     return `${(n / 1_000).toFixed(0)}K`;
+  return String(n);
 };
 
-// ─── Stat Card ────────────────────────────────────────────────────────────
-const StatCard = ({ title, value, change, icon, colorKey = 'primary', sparkValues, trend = 'up' }) => {
-  const trendColor = trend === 'up' ? '#22c55e' : '#ef4444';
-  const { hex, bg } = CARD_COLORS[colorKey] ?? CARD_COLORS.primary;
+/* ─── Stat Card ─────────────────────────────────────────────── */
+const PALETTE = {
+  blue:   { hex: '#3557bc', bg: 'rgba(53,87,188,0.12)',  light: '#7aa3ff' },
+  amber:  { hex: '#d97706', bg: 'rgba(217,119,6,0.1)',   light: '#fbbf24' },
+  green:  { hex: '#059669', bg: 'rgba(5,150,105,0.1)',   light: '#34d399' },
+  violet: { hex: '#7c3aed', bg: 'rgba(124,58,237,0.1)',  light: '#a78bfa' },
+};
+
+const StatCard = ({ title, value, sub, icon, palette = 'blue', trend }) => {
+  const { hex, bg, light } = PALETTE[palette];
+  const isUp = trend >= 0;
   return (
-    <article className={styles.statCard}>
+    <div className={styles.statCard}>
       <div className={styles.statTop}>
         <div>
           <p className={styles.statTitle}>{title}</p>
-          <h3 className={styles.statValue} style={{ color: hex }}>{value}</h3>
+          <p className={styles.statValue}>{value}</p>
         </div>
-        <span className={styles.statIcon} style={{ background: bg, color: hex }}>
-          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>{icon}</span>
-        </span>
+        <div className={styles.statIcon} style={{ background: bg }}>
+          <span className="material-symbols-outlined" style={{ fontSize: 22, color: hex, fontVariationSettings: "'FILL' 1" }}>{icon}</span>
+        </div>
       </div>
-      <div className={styles.statChange}>
-        <span className={styles.changeBadge} style={{ background: `${trendColor}18`, color: trendColor }}>
-          <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
-            {trend === 'up' ? 'trending_up' : 'trending_down'}
+      <div className={styles.statFooter}>
+        {trend != null && (
+          <span className={styles.trendBadge} style={{ background: isUp ? 'rgba(5,150,105,0.12)' : 'rgba(220,38,38,0.1)', color: isUp ? '#059669' : '#dc2626' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: 13 }}>{isUp ? 'trending_up' : 'trending_down'}</span>
+            {Math.abs(trend)}%
           </span>
-          {change}
-        </span>
-        <span className={styles.changeLabel}>vs last update</span>
+        )}
+        <span className={styles.statSub}>{sub}</span>
       </div>
-      <Sparkline values={sparkValues} color={hex} />
-    </article>
-  );
-};
-
-// ─── Safety score bar ─────────────────────────────────────────────────────
-const SafetyBar = ({ score }) => {
-  const color = score >= 90 ? '#22c55e' : score >= 70 ? '#f59e0b' : '#ef4444';
-  return (
-    <div className={styles.safetyWrap} title={`Safety: ${score}%`}>
-      <div className={styles.safetyTrack}>
-        <div className={styles.safetyFill} style={{ width: `${score}%`, background: color }} />
-      </div>
-      <span className={styles.safetyValue} style={{ color }}>{score}%</span>
+      <div className={styles.statGlow} style={{ background: light }} />
     </div>
   );
 };
 
-// ─── Activity log item ────────────────────────────────────────────────────
-const activityLog = [
-  { icon: 'person_add', text: 'New member joined Nesa_Nexus', time: '2s ago', color: '#22c55e' },
-  { icon: 'flag', text: 'Report flagged in Creative_Core', time: '14s ago', color: '#f59e0b' },
-  { icon: 'hub', text: 'PixelArmy reached 1.1M members', time: '1m ago', color: 'var(--color-primary)' },
-  { icon: 'security', text: 'Safety scan completed — 0 issues', time: '3m ago', color: '#22c55e' },
-  { icon: 'person_cancel', text: 'User banned from TechWave', time: '7m ago', color: '#ef4444' },
+/* ─── Custom Tooltip ────────────────────────────────────────── */
+const CustomTooltip = ({ active, payload, label }) => {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className={styles.tooltip}>
+      <p className={styles.tooltipLabel}>{label}</p>
+      {payload.map((p, i) => (
+        <p key={i} className={styles.tooltipVal} style={{ color: p.color }}>
+          {p.name}: <strong>{fmt(p.value)}</strong>
+        </p>
+      ))}
+    </div>
+  );
+};
+
+/* ─── Activity Items ────────────────────────────────────────── */
+const ACTIVITY_POOL = [
+  { text: 'New Discord server registered',   icon: 'hub',           color: '#5865F2' },
+  { text: 'Instagram account verified',       icon: 'photo_camera',  color: '#E1306C' },
+  { text: 'TikTok content featured',          icon: 'play_circle',   color: '#555' },
+  { text: 'Donation received — Rp 50,000',    icon: 'favorite',      color: '#ef4444' },
+  { text: 'YouTube channel added',            icon: 'smart_display', color: '#FF0000' },
+  { text: 'New community member joined',      icon: 'person_add',    color: '#059669' },
+  { text: 'WhatsApp channel updated',         icon: 'chat',          color: '#25D366' },
+  { text: 'Roblox game featured',             icon: 'sports_esports',color: '#00A2FF' },
+  { text: 'Visitor count milestone: 1000',    icon: 'bar_chart',     color: '#7c3aed' },
+  { text: 'System health check passed',       icon: 'check_circle',  color: '#059669' },
+];
+function makeActivity() {
+  const now = new Date();
+  return ACTIVITY_POOL.sort(() => Math.random() - 0.5).slice(0, 6).map((a, i) => ({
+    ...a,
+    time: new Date(now - i * 1000 * 60 * (3 + Math.floor(Math.random() * 20)))
+            .toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+  }));
+}
+
+/* ─── Platform Links ─────────────────────────────────────────── */
+const PLATFORM_LINKS = [
+  { label: 'Discord',   to: '/admin/discord',   brandCls: 'fa-brands fa-discord',   color: '#5865F2' },
+  { label: 'WhatsApp',  to: '/admin/whatsapp',  brandCls: 'fa-brands fa-whatsapp',  color: '#25D366' },
+  { label: 'Instagram', to: '/admin/instagram', brandCls: 'fa-brands fa-instagram', color: '#E1306C' },
+  { label: 'TikTok',    to: '/admin/tiktok',    brandCls: 'fa-brands fa-tiktok',    color: '#333' },
+  { label: 'YouTube',   to: '/admin/youtube',   brandCls: 'fa-brands fa-youtube',   color: '#FF0000' },
+  { label: 'Roblox',    to: '/admin/roblox',    brandCls: 'fa-solid fa-gamepad',    color: '#00A2FF' },
 ];
 
-// ─── Main Page ────────────────────────────────────────────────────────────
+/* ═══ AdminDashboardPage ═══════════════════════════════════════ */
 const AdminDashboardPage = () => {
-  const { stats, prevStats } = useRealtimeStats(3000);
-  const [communities, setCommunities] = useState([]);
-  const [loadingCom, setLoadingCom] = useState(true);
+  const [stats, setStats]       = useState(null);
+  const [chart, setChart]       = useState(null);
+  const [activity, setActivity] = useState(makeActivity);
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  const intervalRef = useRef(null);
 
-  // Update timestamp on stats change
-  useEffect(() => {
-    if (stats) setLastUpdated(new Date());
-  }, [stats]);
-
-  // Load communities once
-  useEffect(() => {
-    fetchCommunities()
-      .then(setCommunities)
-      .catch(() => setCommunities([]))
-      .finally(() => setLoadingCom(false));
+  const loadData = useCallback(async () => {
+    try {
+      const [s, c] = await Promise.all([fetchStats(), fetchChartData()]);
+      setStats(s);
+      setChart(c);
+      setLastUpdated(new Date());
+    } catch (_) {}
   }, []);
 
-  const fmt = (n) => {
-    if (!n && n !== 0) return '—';
-    if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(2)}M`;
-    if (n >= 1_000) return `${n.toLocaleString()}`;
-    return String(n);
-  };
+  useEffect(() => {
+    loadData();
+    intervalRef.current = setInterval(() => {
+      loadData();
+      setActivity(makeActivity());
+    }, 30_000); // refresh every 30s
+    return () => clearInterval(intervalRef.current);
+  }, [loadData]);
 
-  const diff = (curr, prev, key) => {
-    if (!curr || !prev) return null;
-    const delta = curr[key] - prev[key];
-    const sign = delta >= 0 ? '+' : '';
-    return { label: `${sign}${delta.toLocaleString()}`, trend: delta >= 0 ? 'up' : 'down' };
-  };
+  const { theme, toggle } = useTheme();
+  const timeStr = lastUpdated.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-  const visitorsDiff = diff(stats, prevStats, 'totalVisitors');
-  const commDiff = diff(stats, prevStats, 'activeCommunities');
-  const velDiff = diff(stats, prevStats, 'nesaVelocity');
-
-  // Memoize sparklines so they don't re-randomise on every 3-second poll
-  const barsRef = useRef({
-    visitors: Array.from({ length: 6 }, () => Math.floor(Math.random() * 60 + 30)),
-    communities: Array.from({ length: 6 }, () => Math.floor(Math.random() * 60 + 30)),
-    velocity: Array.from({ length: 6 }, () => Math.floor(Math.random() * 60 + 30)),
-  });
+  /* Recharts colors for pie */
+  const PIE_COLORS = ['#5865F2','#25D366','#E1306C','#555','#FF0000','#00A2FF'];
 
   return (
     <div className={styles.page}>
-      {/* ── Header ── */}
-      <header className={styles.header}>
-        <div className={styles.headerLeft}>
-          <h1 className={styles.headerTitle}>Analytics Overview</h1>
-          <p className={styles.headerSub}>
-            Live data · Last updated{' '}
-            <time dateTime={lastUpdated.toISOString()}>
-              {lastUpdated.toLocaleTimeString()}
-            </time>
-          </p>
-        </div>
-        <div className={styles.headerRight}>
-          <div className={styles.searchWrap}>
-            <span className="material-symbols-outlined" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-outline)', fontSize: '18px' }}>search</span>
-            <input
-              type="search"
-              placeholder="Search commands..."
-              className={styles.searchInput}
-              aria-label="Search commands"
-            />
-          </div>
-          <button className={styles.notifBtn} aria-label="Notifications">
-            <span className="material-symbols-outlined">notifications</span>
-            <span className={styles.notifDot} />
-          </button>
-          <button className={styles.exportBtn}>
-            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>download</span>
-            Export Report
-          </button>
-        </div>
-      </header>
 
-      {/* ── Realtime pulse indicator ── */}
-      <div className={styles.realtimeBanner}>
-        <span className={styles.realtimeDot} />
-        <span>Realtime — data refreshes every 3 seconds</span>
-        {stats && (
-          <span className={styles.realtimeViral}>
-            Viral Index: <strong>{stats.viralIndex}</strong>
-          </span>
-        )}
+      {/* ── Page Header ── */}
+      <div className={styles.pageHeader}>
+        <div className={styles.pageHeaderLeft}>
+          <h1 className={styles.pageTitle}>Dashboard</h1>
+          <div className={styles.liveChip}>
+            <span className={styles.liveDot} />
+            Live · Updated {timeStr}
+          </div>
+        </div>
+        <div className={styles.pageHeaderRight}>
+          {/* Theme Toggle */}
+          <button
+            className={styles.themeToggleBtn}
+            onClick={toggle}
+            title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            aria-label="Toggle theme"
+          >
+            <span
+              className="material-symbols-outlined"
+              style={{ fontSize: 18, fontVariationSettings: "'FILL' 1" }}
+            >
+              {theme === 'light' ? 'dark_mode' : 'light_mode'}
+            </span>
+          </button>
+
+          <Link to="/" className={styles.viewSiteBtn}>
+            <span className="material-symbols-outlined" style={{ fontSize: 16 }}>open_in_new</span>
+            View Site
+          </Link>
+        </div>
       </div>
 
       {/* ── Stat Cards ── */}
-      <section className={styles.statsGrid} aria-label="Analytics cards">
-        {stats ? (
-          <>
-            <StatCard
-              title="Total Visitors"
-              value={fmt(stats.totalVisitors)}
-              change={visitorsDiff?.label ?? '+0'}
-              trend={visitorsDiff?.trend ?? 'up'}
-              icon="trending_up"
-              colorKey="primary"
-              sparkValues={barsRef.current.visitors}
-            />
-            <StatCard
-              title="Active Communities"
-              value={fmt(stats.activeCommunities)}
-              change={commDiff?.label ?? '+0'}
-              trend={commDiff?.trend ?? 'up'}
-              icon="hub"
-              colorKey="secondary"
-              sparkValues={barsRef.current.communities}
-            />
-            <StatCard
-              title="Nesa Velocity"
-              value={`${fmt(stats.nesaVelocity)}/min`}
-              change={velDiff?.label ? `${velDiff.label}/min` : 'Stable'}
-              trend={velDiff?.trend ?? 'up'}
-              icon="bolt"
-              colorKey="tertiary"
-              sparkValues={barsRef.current.velocity}
-            />
-          </>
-        ) : (
-          Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className={`skeleton ${styles.skeletonCard}`} />
-          ))
-        )}
-      </section>
+      <div className={styles.statsGrid}>
+        <StatCard
+          title="Total Visitors"
+          value={stats ? fmt(stats.totalVisitors) : '—'}
+          sub="Semua waktu"
+          icon="groups"
+          palette="blue"
+          trend={stats ? 12 : null}
+        />
+        <StatCard
+          title="Active Communities"
+          value={stats ? fmt(stats.activeCommunities) : '—'}
+          sub="Across 6 platforms"
+          icon="hub"
+          palette="amber"
+          trend={stats ? 5 : null}
+        />
+        <StatCard
+          title="Nesa Velocity"
+          value={stats ? `${fmt(stats.nesaVelocity)}/min` : '—'}
+          sub="Interaction rate"
+          icon="bolt"
+          palette="green"
+          trend={stats ? 3 : null}
+        />
+        <StatCard
+          title="Viral Index"
+          value={stats ? `${stats.viralIndex} / 10` : '—'}
+          sub="Content virality"
+          icon="local_fire_department"
+          palette="violet"
+          trend={null}
+        />
+      </div>
 
-      {/* ── Table + Activity ── */}
-      <section className={styles.lowerGrid}>
-        {/* Communities Table */}
-        <div className={styles.tableCard}>
-          <div className={styles.tableHeader}>
-            <h2 className={styles.tableTitle}>Recent Communities</h2>
-            <button className={styles.viewAllBtn}>View All</button>
+      {/* ── Quick Platform Access ── */}
+      <div className={styles.platformRow}>
+        <h2 className={styles.sectionTitle}>Platform Management</h2>
+        <div className={styles.platformCards}>
+          {PLATFORM_LINKS.map(({ label, to, brandCls, color }) => {
+            const count = chart?.platformData?.find(p => p.name === label)?.value ?? '—';
+            return (
+              <Link key={to} to={to} className={styles.platformCard}>
+                <div className={styles.platformCardIcon} style={{ background: `${color}18`, border: `1.5px solid ${color}30` }}>
+                  <i className={brandCls} style={{ fontSize: 22, color }} />
+                </div>
+                <p className={styles.platformCardName}>{label}</p>
+                <p className={styles.platformCardCount}>{count} <span>entries</span></p>
+                <span className="material-symbols-outlined" style={{ fontSize: 14, color: 'var(--color-outline)', marginLeft: 'auto' }}>arrow_forward_ios</span>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Charts Row ── */}
+      <div className={styles.chartsGrid}>
+
+        {/* Visitor Trend */}
+        <div className={styles.chartCard}>
+          <div className={styles.chartHeader}>
+            <h2 className={styles.chartTitle}>Visitor Trend (7 Days)</h2>
+            <span className={styles.chartBadge}>Real Data</span>
           </div>
-          <div className={styles.tableWrap}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>Community</th>
-                  <th>Members</th>
-                  <th>Growth</th>
-                  <th>Safety</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loadingCom ? (
-                  Array.from({ length: 4 }).map((_, i) => (
-                    <tr key={i}>
-                      {Array.from({ length: 5 }).map((__, j) => (
-                        <td key={j}><div className="skeleton" style={{ height: '16px', borderRadius: '4px' }} /></td>
-                      ))}
-                    </tr>
-                  ))
-                ) : (
-                  communities.map((c) => (
-                    <tr key={c.id}>
-                      <td>
-                        <div className={styles.comCell}>
-                          <div
-                            className={styles.comInitial}
-                            style={{
-                              background: c.color === 'secondary' ? 'var(--color-secondary-container)' : 'var(--color-primary)',
-                              color: c.color === 'secondary' ? 'var(--color-on-secondary-container)' : 'white',
-                            }}
-                          >
-                            {c.initial}
-                          </div>
-                          <div>
-                            <p className={styles.comName}>{c.name}</p>
-                            <p className={styles.comMembers}>{c.members} members</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className={styles.tdMembers}>{c.members}</td>
-                      <td className={styles.tdGrowth}>{c.growth}</td>
-                      <td><SafetyBar score={c.safetyScore} /></td>
-                      <td>
-                        <div className={styles.actions}>
-                          <button className={styles.actionEdit} aria-label={`Edit ${c.name}`}>
-                            <span className="material-symbols-outlined">edit</span>
-                          </button>
-                          <button className={styles.actionDelete} aria-label={`Delete ${c.name}`}>
-                            <span className="material-symbols-outlined">delete</span>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+          {chart?.visitorTrend ? (
+            <ResponsiveContainer width="100%" height={220}>
+              <AreaChart data={chart.visitorTrend} margin={{ top: 4, right: 12, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="visitorGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%"  stopColor="#3557bc" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#3557bc" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(128,128,128,0.1)" />
+                <XAxis dataKey="day" tick={{ fontSize: 11, fill: 'var(--color-outline)' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: 'var(--color-outline)' }} axisLine={false} tickLine={false} />
+                <Tooltip content={<CustomTooltip />} />
+                <Area type="monotone" dataKey="visits" name="Visitors" stroke="#3557bc" strokeWidth={2.5} fill="url(#visitorGrad)" dot={{ r: 4, fill: '#3557bc' }} activeDot={{ r: 6 }} />
+              </AreaChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className={`skeleton ${styles.chartSkeleton}`} />
+          )}
         </div>
 
-        {/* Activity Log */}
-        <div className={styles.activityCard}>
-          <h2 className={styles.tableTitle} style={{ marginBottom: '20px' }}>Live Activity</h2>
-          <ul className={styles.activityList}>
-            {activityLog.map((item, i) => (
-              <li key={i} className={styles.activityItem}>
-                <span
-                  className={styles.activityIcon}
-                  style={{ background: `${item.color}15`, color: item.color }}
+        {/* Platform Distribution Pie */}
+        <div className={styles.chartCard}>
+          <div className={styles.chartHeader}>
+            <h2 className={styles.chartTitle}>Platform Distribution</h2>
+            <span className={styles.chartBadge}>Live</span>
+          </div>
+          {chart?.platformData ? (
+            <ResponsiveContainer width="100%" height={220}>
+              <PieChart>
+                <Pie
+                  data={chart.platformData}
+                  cx="50%" cy="50%"
+                  innerRadius={55} outerRadius={85}
+                  paddingAngle={4}
+                  dataKey="value"
+                  nameKey="name"
                 >
-                  <span className="material-symbols-outlined" style={{ fontSize: '16px', fontVariationSettings: "'FILL' 1" }}>
-                    {item.icon}
-                  </span>
+                  {chart.platformData.map((entry, i) => (
+                    <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} stroke="none" />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+                <Legend iconType="circle" iconSize={10} formatter={(v) => <span style={{ fontSize: 12 }}>{v}</span>} />
+              </PieChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className={`skeleton ${styles.chartSkeleton}`} />
+          )}
+        </div>
+
+        {/* Donation Bar Chart */}
+        <div className={styles.chartCard}>
+          <div className={styles.chartHeader}>
+            <h2 className={styles.chartTitle}>Donations (6 Months)</h2>
+            <span className={styles.chartBadge}>Rp</span>
+          </div>
+          {chart ? (
+            chart.donationTrend?.length ? (
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={chart.donationTrend} margin={{ top: 4, right: 12, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(128,128,128,0.1)" />
+                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--color-outline)' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11, fill: 'var(--color-outline)' }} axisLine={false} tickLine={false} tickFormatter={v => fmt(v)} />
+                  <Tooltip content={<CustomTooltip />} formatter={(v) => [`Rp ${fmt(v)}`, 'Donation']} />
+                  <Bar dataKey="total" name="Donation" fill="#ef4444" radius={[4,4,0,0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className={styles.emptyChart}>
+                <span className="material-symbols-outlined" style={{ fontSize: 36, color: 'var(--color-outline)' }}>bar_chart</span>
+                <p>Belum ada data donasi</p>
+              </div>
+            )
+          ) : (
+            <div className={`skeleton ${styles.chartSkeleton}`} />
+          )}
+        </div>
+
+      </div>
+
+      {/* ── Bottom Row: Activity + Community Counts ── */}
+      <div className={styles.bottomGrid}>
+
+        {/* Live Activity */}
+        <div className={styles.activityCard}>
+          <h2 className={styles.sectionTitle} style={{ marginBottom: 16 }}>Live Activity</h2>
+          <ul className={styles.activityList}>
+            {activity.map((item, i) => (
+              <li key={i} className={styles.activityItem}>
+                <span className={styles.activityIcon} style={{ background: `${item.color}15`, color: item.color }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: 16, fontVariationSettings: "'FILL' 1" }}>{item.icon}</span>
                 </span>
                 <div className={styles.activityContent}>
                   <p className={styles.activityText}>{item.text}</p>
@@ -318,33 +332,41 @@ const AdminDashboardPage = () => {
               </li>
             ))}
           </ul>
+        </div>
 
-          {/* Staff Control */}
-          <div className={styles.staffControl}>
-            <h3 className={styles.staffTitle}>Staff Control</h3>
-            <div className={styles.staffRole}>
-              <div className={styles.staffRoleHeader}>
-                <span className={styles.staffRoleName} style={{ color: 'var(--color-primary)' }}>Founder</span>
-                <span className="material-symbols-outlined" style={{ fontSize: '16px', color: 'var(--color-primary)', fontVariationSettings: "'FILL' 1" }}>verified</span>
-              </div>
-              <button className={styles.manageBtn}>Manage Access</button>
-            </div>
-            <div className={styles.staffRole}>
-              <div className={styles.staffRoleHeader}>
-                <span className={styles.staffRoleName} style={{ color: 'var(--color-secondary)' }}>Admin</span>
-                <span className="material-symbols-outlined" style={{ fontSize: '16px', color: 'var(--color-secondary)', fontVariationSettings: "'FILL' 1" }}>shield</span>
-              </div>
-              <p className={styles.staffCount}>12 Active Personnel</p>
-              <button className={styles.assignBtn}>Assign New</button>
-            </div>
+        {/* Community Counts (real data) */}
+        <div className={styles.communityCard}>
+          <h2 className={styles.sectionTitle} style={{ marginBottom: 16 }}>Community Count</h2>
+          <div className={styles.communityList}>
+            {chart?.platformData ? (
+              chart.platformData.map((p, i) => (
+                <div key={p.name} className={styles.communityRow}>
+                  <div className={styles.communityLeft}>
+                    <i className={PLATFORM_LINKS[i]?.brandCls} style={{ fontSize: 16, color: p.color, width: 20, textAlign: 'center' }} />
+                    <span className={styles.communityName}>{p.name}</span>
+                  </div>
+                  <div className={styles.communityBar}>
+                    <div
+                      className={styles.communityFill}
+                      style={{
+                        width: `${Math.min(100, (p.value / (Math.max(...chart.platformData.map(x => x.value)) || 1)) * 100)}%`,
+                        background: p.color,
+                      }}
+                    />
+                  </div>
+                  <span className={styles.communityVal}>{p.value}</span>
+                </div>
+              ))
+            ) : (
+              Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className={`skeleton`} style={{ height: 32, borderRadius: 8, marginBottom: 8 }} />
+              ))
+            )}
           </div>
         </div>
-      </section>
 
-      {/* ── FAB ── */}
-      <button className={styles.fab} aria-label="Quick action">
-        <span className="material-symbols-outlined" style={{ fontSize: '28px' }}>add</span>
-      </button>
+      </div>
+
     </div>
   );
 };

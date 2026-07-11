@@ -38,7 +38,7 @@
   padding: 16px 20px 16px 52px;
   border: 1px solid var(--color-outline-variant);
   border-radius: var(--radius-xl);
-  background: white;
+  background: var(--color-surface-container);
   font-size: 15px;
   color: var(--color-on-surface);
   outline: none;
@@ -68,7 +68,7 @@
   font-weight: 600;
   color: var(--color-on-surface-variant);
   border: 1px solid var(--color-outline-variant);
-  background: white;
+  background: var(--color-surface-container);
   transition: all 0.2s ease;
 }
 .catBtn:hover { border-color: var(--color-primary); color: var(--color-primary); background: rgba(0,32,104,0.04); }
@@ -103,7 +103,7 @@
   gap: 16px;
   padding: 24px;
   border-radius: var(--radius-xl);
-  background: white;
+  background: var(--color-surface-container);
   overflow: hidden;
   position: relative;
   transition: transform 0.3s ease;

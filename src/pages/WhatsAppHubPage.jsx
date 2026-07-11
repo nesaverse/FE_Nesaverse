@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { fetchChannels } from '../utils/api';
+import { WA_TEMPLATES } from '../utils/whatsapp';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
+import SEO from '../components/SEO';
 import styles from './WhatsAppHubPage.module.css';
 
 const CATEGORIES = ['All', 'Gaming', 'DankMemes', 'Entertainment', 'AI-Art', 'Tech', 'Elite'];
@@ -29,7 +31,7 @@ const ChannelCard = ({ channel }) => {
         </div>
         <p className={styles.channelDesc}>{channel.description}</p>
       </div>
-      <a href="#" className={styles.joinBtn} onClick={(e) => e.preventDefault()}>
+      <a href={channel.link || WA_TEMPLATES.whatsapp} target="_blank" rel="noopener noreferrer" className={styles.joinBtn}>
         Join Channel
       </a>
     </article>
@@ -59,6 +61,11 @@ const WhatsAppHubPage = () => {
 
   return (
     <div className={styles.page}>
+      <SEO 
+        title="WhatsApp Hub — Direktori Channel Terkurasi" 
+        description="Temukan dan ikuti channel WhatsApp terpopuler dan terkurasi untuk gaming, meme, teknologi, dan hiburan di NesaVerse."
+        keywords="whatsapp channel indonesia, direktori whatsapp channel, nesaverse whatsapp, whatsapp community"
+      />
       <div
         className={styles.meshBg}
         style={{
@@ -131,8 +138,12 @@ const WhatsAppHubPage = () => {
               We only accept the highest quality content hubs.
             </p>
             <div className={styles.ctaBtns}>
-              <Button variant="primary" size="lg">Submit your Channel</Button>
-              <Button variant="secondary" size="lg">Partner with Us</Button>
+              <a href={WA_TEMPLATES.whatsapp} target="_blank" rel="noopener noreferrer">
+                <Button variant="primary" size="lg">Daftar Channel</Button>
+              </a>
+              <a href={WA_TEMPLATES.whatsapp} target="_blank" rel="noopener noreferrer">
+                <Button variant="secondary" size="lg">Partner with Us</Button>
+              </a>
             </div>
           </div>
         </div>

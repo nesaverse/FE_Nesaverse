@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import Button from '../components/ui/Button';
+import SEO from '../components/SEO';
 import styles from './HomePage.module.css';
 
 const features = [
@@ -7,7 +8,7 @@ const features = [
   { icon: 'chat', title: 'WhatsApp Channels', desc: 'Discover the most exclusive WhatsApp channels delivering premium content daily.', to: '/whatsapp' },
   { icon: 'groups', title: 'Creator Network', desc: 'Connect with elite creators, form clans, and build your digital legacy together.', to: '/about' },
   { icon: 'shield', title: 'Safe & Moderated', desc: 'Every community is vetted and monitored for quality and safety standards.', to: '#' },
-  { icon: 'bolt', title: 'Live Analytics', desc: 'Real-time insights on community growth, engagement, and viral velocity.', to: '/admin' },
+  { icon: 'bolt', title: 'Live Analytics', desc: 'Real-time insights on community growth, engagement, and viral velocity.', to: '#' },
   { icon: 'rocket_launch', title: 'Growth Tools', desc: 'Exclusive partner tools to amplify your reach and grow exponentially.', to: '#' },
 ];
 
@@ -21,6 +22,11 @@ const stats = [
 const HomePage = () => {
   return (
     <div className={styles.page}>
+      <SEO 
+        title="Home for Digital Communities" 
+        description="NesaVerse is the backbone of digital expression. Discover and explore curated Discord servers, WhatsApp channels, and digital creator hubs."
+        keywords="nesaverse, communities, discord servers, whatsapp channels, digital creators, gaming hubs"
+      />
       {/* Floating background shapes */}
       <div className={styles.bgShapes} aria-hidden="true">
         <div className={`${styles.shape} ${styles.shape1} floating-shape`} />
@@ -38,10 +44,10 @@ const HomePage = () => {
           <h1 className={styles.heroTitle}>
             Welcome to the{' '}
             <span className="gradient-text">NesaVerse</span>{' '}
-            Network
+            
           </h1>
           <p className={styles.heroSub}>
-            We are building the backbone of digital expression. NesaVerse Network exists to synchronize
+            We are building the backbone of digital expression. NesaVerse  exists to synchronize
             the heartbeat of internet culture — a high-fidelity home for creators, clans, and communities
             to collide and create something legendary.
           </p>
@@ -117,7 +123,7 @@ const HomePage = () => {
       <section className={styles.cta}>
         <div className={`container ${styles.ctaInner}`}>
           <div className={styles.ctaContent}>
-            <h2 className={styles.ctaTitle}>Ready to Join the Network?</h2>
+            <h2 className={styles.ctaTitle}>Ready to Join the Nesaverse?</h2>
             <p className={styles.ctaDesc}>
               Apply to feature your community and get access to exclusive growth tools,
               partner integrations, and front-page placement.

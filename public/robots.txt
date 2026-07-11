@@ -1,0 +1,13 @@
+# robots.txt for NesaVerse
+# https://www.robotstxt.org/
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /admin/*
+
+# Host
+Host: https://nesaverse.vercel.app
+
+# Sitemap
+Sitemap: https://nesaverse.vercel.app/sitemap.xml

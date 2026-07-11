@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { fetchServers } from '../utils/api';
+import { WA_TEMPLATES } from '../utils/whatsapp';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
+import SEO from '../components/SEO';
 import styles from './DiscordHubPage.module.css';
 
 const CATEGORIES = ['All', 'Gaming', 'Tech', 'Innovation', 'Social', 'Building', 'Creators', 'Crypto', 'Art & Design'];
@@ -39,7 +41,9 @@ const ServerCard = ({ server, index }) => {
               </span>
             )}
           </div>
-          <Button variant="primary" size="sm">Join Server</Button>
+          <a href={server.link || WA_TEMPLATES.discord} target="_blank" rel="noopener noreferrer">
+            <Button variant="primary" size="sm">Join Server</Button>
+          </a>
         </div>
         <h3 className={styles.serverName}>{server.name}</h3>
         <p className={styles.serverDesc}>{server.description}</p>
@@ -91,6 +95,11 @@ const DiscordHubPage = () => {
 
   return (
     <div className={styles.page}>
+      <SEO 
+        title="Discord Hub — Temukan Server Terbaik" 
+        description="Temukan dan bergabunglah dengan server Discord terbaik di Indonesia untuk gaming, tech, art, dan komunitas di NesaVerse."
+        keywords="discord server indonesia, komunitas discord, gaming discord, tech discord, nesaverse"
+      />
       <div className={styles.meshBg} aria-hidden="true" />
 
       <header className={`container ${styles.pageHeader}`}>
@@ -145,7 +154,11 @@ const DiscordHubPage = () => {
             <p>Tidak ada server ditemukan</p>
           </div>
         ) : (
-          servers.map((server, i) => <ServerCard key={server.id} server={server} index={i} />)
+          servers.map((server, i) => (
+            <div key={server.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 0.06}s` }}>
+              <ServerCard server={server} index={i} />
+            </div>
+          ))
         )}
       </section>
 
@@ -158,8 +171,12 @@ const DiscordHubPage = () => {
             Daftarkan server kamu dan dapatkan akses ke tools pertumbuhan eksklusif, partner bot, dan placement halaman utama.
           </p>
           <div className={styles.ctaBtns}>
-            <Button variant="primary" size="lg">Daftarkan Server</Button>
-            <Button variant="secondary" size="lg">Pelajari Lebih</Button>
+            <a href={WA_TEMPLATES.discord} target="_blank" rel="noopener noreferrer">
+              <Button variant="primary" size="lg">Daftarkan Server</Button>
+            </a>
+            <a href={WA_TEMPLATES.discord} target="_blank" rel="noopener noreferrer">
+              <Button variant="secondary" size="lg">Partner With Us</Button>
+            </a>
           </div>
         </div>
       </section>

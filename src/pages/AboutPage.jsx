@@ -3,6 +3,7 @@ import { useIntersection } from '../hooks/useIntersection';
 import { useCountUp } from '../hooks/useCountUp';
 import { fetchStats } from '../utils/api';
 import Button from '../components/ui/Button';
+import SEO from '../components/SEO';
 import styles from './AboutPage.module.css';
 
 const team = [
@@ -35,6 +36,11 @@ const AboutPage = () => {
 
   return (
     <div className={styles.page}>
+      <SEO 
+        title="About Us" 
+        description="Learn more about NesaVerse, our mission, vision, and how we are synchronizing the heartbeat of internet culture for creators, clans, and communities."
+        keywords="about nesaverse, nesaverse team, our mission, community backbone"
+      />
       {/* Floating shapes */}
       <div className={styles.bgShapes} aria-hidden="true">
         <div className={`${styles.shape1} floating-shape`} />
@@ -45,10 +51,10 @@ const AboutPage = () => {
       <section className={`container ${styles.mission}`}>
         <div className={styles.missionText}>
           <h1 className={styles.missionTitle}>
-            About <span className="gradient-text">NesaVerse Network</span>
+            About <span className="gradient-text">NesaVerse </span>
           </h1>
           <p className={styles.missionDesc}>
-            We are building the backbone of digital expression. NesaVerse Network exists to synchronize
+            We are building the backbone of digital expression. NesaVerse  exists to synchronize
             the heartbeat of internet culture, providing a high-fidelity home for creators, clans, and
             communities to collide and create something legendary.
           </p>
@@ -61,7 +67,7 @@ const AboutPage = () => {
           <div className={styles.imgGlow} />
           <img
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRzcBerLapVvk3TzyGqRwLdbnoL5N1PCTC2sdmlwJAmx9F7MnQoM7G8WRi2Gbf1p08Jlnytd-SRfTY556tudmF1Sbk57v9RJWpE-WXcTER-N7HAdUzQVayVyHA6lfdqPMtQduwVcZGMvt0blU5nq2fDg7unVltWQu0zf8B2j9t5_AtXy9iP5ToJjAReG8E1rlMyHiWnAAWppSUAEBceARxRzttnjrAS27lnptYMERHHsgdE6cv4H9bAc2ZOIaHvjE0g_jYj_459ao"
-            alt="NesaVerse Network — Futuristic neural network visualization"
+            alt="NesaVerse  — Futuristic neural  visualization"
             className={styles.missionImg}
             loading="lazy"
           />
@@ -93,7 +99,7 @@ const AboutPage = () => {
             The Architecture <span className="gradient-text">Team</span>
           </h2>
           <p className={styles.teamDesc}>
-            Meet the digital architects maintaining the ecosystem of the NesaVerse Network.
+            Meet the digital architects maintaining the ecosystem of the NesaVerse .
           </p>
         </div>
         <div className={styles.teamGrid}>

@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import api from '../utils/api';
 import styles from './AdminLoginPage.module.css';
-
-const ADMIN_USER = import.meta.env.VITE_ADMIN_USERNAME || 'admin';
-const ADMIN_PASS = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
 
 const AdminLoginPage = () => {
   const navigate = useNavigate();
@@ -35,14 +33,15 @@ const AdminLoginPage = () => {
     }
 
     setLoading(true);
-    // Simulate async check
-    await new Promise((r) => setTimeout(r, 700));
-
-    if (form.username === ADMIN_USER && form.password === ADMIN_PASS) {
-      sessionStorage.setItem('nv_admin_auth', 'true');
+    try {
+      const res = await api.post('/auth/login', {
+        username: form.username,
+        password: form.password,
+      });
+      localStorage.setItem('token', res.data.token);
       navigate(from, { replace: true });
-    } else {
-      setError('Username atau password salah.');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Username atau password salah.');
       triggerShake();
     }
     setLoading(false);
